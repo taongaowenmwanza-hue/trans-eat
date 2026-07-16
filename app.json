@@ -1,0 +1,9 @@
+{
+  "name": "TransEatApp",
+  "displayName": "TransEatApp",
+  "extra": {
+    "eas": {
+      "projectId": "e03f8f94-7140-4452-894e-ae7d9561131a"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "TransEat",
+  "short_name": "TransEat",
+  "description": "Order food before you arrive. Eat when you get there.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#CB2602",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}
