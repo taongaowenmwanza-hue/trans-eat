@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   Alert, KeyboardAvoidingView, Platform, useWindowDimensions, ScrollView,
 } from 'react-native';
-import { Colors } from '../theme/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authAPI } from '../services/api';
 
 const AuthScreen = ({ onLogin, isPartner }: { onLogin: () => void; isPartner?: boolean }) => {
@@ -32,8 +32,8 @@ const AuthScreen = ({ onLogin, isPartner }: { onLogin: () => void; isPartner?: b
     setLoading(true);
     try {
       const res = await authAPI.verifyOTP(email, otp, isPartner);
-      localStorage.setItem('token', res.data.access_token);
-      localStorage.setItem('role', res.data.role || 'customer');
+      await AsyncStorage.setItem('token', res.data.access_token);
+      await AsyncStorage.setItem('role', res.data.role || 'customer');
       onLogin();
     } catch (err: any) {
       Alert.alert('Error', err.response?.data?.detail || 'Invalid OTP');
@@ -57,7 +57,7 @@ const AuthScreen = ({ onLogin, isPartner }: { onLogin: () => void; isPartner?: b
             <TextInput
               style={styles.input}
               placeholder="you@email.com"
-              placeholderTextColor={Colors.textMuted}
+              placeholderTextColor="rgba(255,255,255,0.4)"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -72,7 +72,7 @@ const AuthScreen = ({ onLogin, isPartner }: { onLogin: () => void; isPartner?: b
               <TextInput
                 style={styles.input}
                 placeholder="000000"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor="rgba(255,255,255,0.4)"
                 value={otp}
                 onChangeText={setOtp}
                 keyboardType="numeric"
