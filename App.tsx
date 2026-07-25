@@ -55,9 +55,17 @@ const AppContent = () => {
 
   const checkAuth = async () => {
     const token = localStorage.getItem('token');
-    if (!token) { setIsLoggedIn(false); setScreen('Splash'); setChecking(false); return; }
+    if (!token) { 
+      setIsLoggedIn(false); 
+      setScreen('Splash'); 
+      setChecking(false); 
+      return; 
+    }
     try {
-      const res = await authAPI.getMe();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('timeout')), 5000)
+      );
+      const res = await Promise.race([authAPI.getMe(), timeoutPromise]) as any;
       setIsLoggedIn(true);
       const role = res.data.role;
       if (role === 'partner') {
