@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Heart, Home as HomeIcon, ClipboardList, User } from 'lucide-react-native';
 import { OrderProvider, useOrder } from './src/context/OrderContext';
 import { CartProvider } from './src/context/CartContext';
@@ -54,14 +55,14 @@ const AppContent = () => {
   }, [screen]);
 
   const checkAuth = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) { 
-      setIsLoggedIn(false); 
-      setScreen('Splash'); 
-      setChecking(false); 
-      return; 
-    }
     try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) { 
+        setIsLoggedIn(false); 
+        setScreen('Splash'); 
+        setChecking(false); 
+        return; 
+      }
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('timeout')), 5000)
       );
@@ -75,8 +76,8 @@ const AppContent = () => {
         setScreen('Home');
       }
     } catch {
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('role');
       setIsLoggedIn(false);
       setScreen('Splash');
     }
@@ -92,8 +93,8 @@ const AppContent = () => {
 
   const handleLogout = async () => {
     try { await authAPI.logout(); } catch {}
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('role');
     setIsLoggedIn(false);
     setIsPartner(false);
     navigate('Splash');
