@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Star, Clock, MapPin, ChevronRight } from 'lucide-react-native';
 import BackHeader from '../components/BackHeader';
 import { useOrder } from '../context/OrderContext';
@@ -34,8 +35,8 @@ const RestaurantsScreen = ({ onBack, onSelectRestaurant }: { onBack: () => void;
   const loadRestaurants = async (town?: string) => {
     setLoading(true);
     try {
-      const searchTerm = localStorage.getItem('searchTerm') || '';
-      const filterCategory = localStorage.getItem('filterCategory') || '';
+      const searchTerm = await AsyncStorage.getItem('searchTerm') || '';
+      const filterCategory = await AsyncStorage.getItem('filterCategory') || '';
 
       if (searchTerm) setSearchInfo(`Results for "${searchTerm}"`);
       else if (filterCategory) setSearchInfo(`Category: ${filterCategory}`);
@@ -77,8 +78,8 @@ const RestaurantsScreen = ({ onBack, onSelectRestaurant }: { onBack: () => void;
 
       setRestaurants(data);
 
-      localStorage.removeItem('searchTerm');
-      localStorage.removeItem('filterCategory');
+      await AsyncStorage.removeItem('searchTerm');
+      await AsyncStorage.removeItem('filterCategory');
     } catch (err) {
       console.log('Error loading restaurants:', err);
     }
